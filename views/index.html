@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <input type="email" placeholder="Digite seu email" id="email">
+        <br>
+        <input type="password" placeholder="Digite sua senha" id="senha">
+        <br>
+        <input type="button" id="botao" value="Enviar">
+    </form>
+    
+
+
+    <script type="text/javascript">
+        const botao = document.getElementById('botao');
+        const email_us = document.getElementById('email');
+        const senha_us = document.getElementById('senha');
+        
+
+
+        botao.addEventListener("click", async() => {
+            const url = "http://127.0.0.1:3000/auth/login/";
+            
+            if(email_us != "" && senha_us != "")
+            {
+                const data = {
+                    email: `${email_us.value}`,
+                    password: `${senha_us.value}`,
+                };
+
+               await fetch(`${url}`,{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data),
+                    } 
+                 ).then(function(resp){
+                    let tokenzinho = resp.token;
+                    localStorage.setItem('token', tokenzinho);
+                    console.log(tokenzinho);
+                    window.location.href = "dashboard.html";
+                 });
+            }
+            else
+            {
+                alert("PREENCHA TODAS INFORMACOES");
+            }
+        })
+    </script>
+    
+</body>
+</html>

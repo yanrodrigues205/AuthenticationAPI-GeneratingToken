@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <div>
+        Bem-Vindo 
+        <span id="usuario">
+
+        </span>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+     
+        if(!token)
+        {
+            window.location.href = 'index.html';
+        }
+        else
+        {
+            const url = "http://127.0.0.1:/protect";
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token }),
+            }).then(function(resp){
+                
+            })
+        }
+
+    </script>
+</body>
+</html>

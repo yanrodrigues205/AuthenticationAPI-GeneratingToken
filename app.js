@@ -5,6 +5,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const cors = require("cors");
 
 //CRIANDO APP COM EXPRESS;
 const app = express();
@@ -12,10 +13,33 @@ const app = express();
 const User = require('./models/User');
 //DEFININDO PARA O APP ACEITAR JSON
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req , res)=>{ // ROTA DE BOAS VINDAS
     res.status(200).json({msg: 'BEM VINDO A API - YAN'})
 })
+
+function auth_middleware()
+{
+    return (req, res, next) => {
+        if(!req.body.token || check_token(req.body.token))
+        {
+            res.status(401).json({msg: "VOCE NAO TEM TOKEN DE AUTORIZACAO!"});
+        }
+        else
+        {   
+            
+            next();
+        }
+    };
+}
+
+app.get("/protect", check_token(), async (req, res) => {
+
+    
+    return res.status(200).json({msg: "VOCE ESTA COMPLETAMENTE AUTORIZADO!"});
+
+});
 
 app.post("/auth/register", async(req, res)=>{ // ROTA PARA CRIACAO DE USUARIO
     const {name, email, password, confirm_password } = req.body;
@@ -66,6 +90,7 @@ app.post("/auth/register", async(req, res)=>{ // ROTA PARA CRIACAO DE USUARIO
 
 
 app.post("/auth/login/", async (req , res) =>{
+    
     const { email, password } = req.body;
     if(!email){
         return res.status(422).json({msg: "Preencha seu email! (email) : (SEU EMAIL) -> entre aspas"})
@@ -101,6 +126,8 @@ app.post("/auth/login/", async (req , res) =>{
 });
 
 
+
+
 //ROTA PRIVADA DA API
 app.get("/user/:id", check_token, async (req, res) =>{ // URL DINAMICA COM GET + FUNCAO PARA VER SE O TOKEN CHEGOU PELO HEADER HTTP
     const id = req.params.id;
@@ -116,24 +143,27 @@ app.get("/user/:id", check_token, async (req, res) =>{ // URL DINAMICA COM GET +
 
 
 //FUNCAO PARA CHECAR SE O TOKEN EXISTE
-function check_token(req, res, next){
-    const authHeader = req.headers['authorization']; // pegando token do header http
-    const token = authHeader && authHeader.split(" ")[1]; //CONFIRMA SE VEIO O TOKEN PELO HEADER E SEPARA INFORMACOES DESNECESSARIAS DELE
+function check_token(){
+    return (req, res, next) => {
+        const authHeader = req.headers['authorization']; // pegando token do header http
+        const token = authHeader && authHeader.split(" ")[1]; //CONFIRMA SE VEIO O TOKEN PELO HEADER E SEPARA INFORMACOES DESNECESSARIAS DELE
 
-    if(!token){
-        return res.status(401).json({ msg: "TOKEN INEXISTENTE, VOCE PRECISA LOGAR!"});
+        if(!token){
+            return res.status(401).json({ msg: "TOKEN INEXISTENTE, VOCE PRECISA LOGAR!"});
+        }
+
+        try{
+
+            const SECRET = process.env.SECRET; 
+            jwt.verify(token, SECRET); // VERIFICACAO PARA SABER SE O TOKEN REALMENTE E VALIDO PELA API JSON WEB TOKEN
+            next(); 
+        }catch(err){
+            res.status(400).json({
+                msg: "Token Invalido!"
+            })
+        }
     }
-
-    try{
-
-        const SECRET = process.env.SECRET; 
-        jwt.verify(token, SECRET); // VERIFICACAO PARA SABER SE O TOKEN REALMENTE E VALIDO PELA API JSON WEB TOKEN
-        next(); 
-    }catch(err){
-        res.status(400).json({
-            msg: "Token Invalido!"
-        })
-    }
+    
 }
 
 const DbUser = process.env.DB_USER; //PEGANDO USUARIO DO BANCO DE DADOS DO ARQUIVO .ENV
