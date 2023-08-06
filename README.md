@@ -10,6 +10,6 @@ Sistema de API para authenticacao, criacao de um token criptografado com informa
 -Bcrypt
 -MongoOse
 -Json Web Token
-
+-Axios
 ## Database:
 -MongoDB
