@@ -17,21 +17,25 @@
     <script>
         const token = localStorage.getItem('token');
      
-        if(!token)
+        if(typeof token == "undefined" && token == "")
         {
             window.location.href = 'index.html';
         }
         else
         {
-            const url = "http://127.0.0.1:/protect";
-            fetch(url, {
+            const url = "http://127.0.0.1:3000/protect";
+            fetch(`${url}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+token
                 },
-                body: JSON.stringify({ token }),
-            }).then(function(resp){
                 
+            }).then(function(resp){
+                if(!resp)
+                {
+                    window.location.href = 'index.html';
+                }
             })
         }
 

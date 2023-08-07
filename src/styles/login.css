@@ -1,0 +1,90 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.container
+{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+form{
+    width: 70%;
+    align-items: center;
+    text-align: center;
+
+}
+form input{
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    padding: 7px;
+    margin: 5px;
+}
+
+.left
+{
+    background: #eeeeee;
+    height: 60%;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+    display: flex;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+  
+}
+.right
+{
+    background: #eeeeee;
+    height: 60%;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+    display: flex;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+@media (max-width: 800px) {
+    .container
+    {
+        flex-direction: column-reverse;
+    }
+    .right img{
+        width: 230px;
+        height: 230px;
+        
+    }
+    form 
+    {
+        width: 80%;
+    }
+    .right
+    {
+        height: 30%;
+        width: 85%;
+        border-radius: unset;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+    }
+    
+    .left{
+        height: 60%;
+        width: 85%;
+        border-radius: unset;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+}

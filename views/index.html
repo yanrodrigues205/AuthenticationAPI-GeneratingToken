@@ -3,16 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="../src/styles/login.css">
 </head>
 <body>
-    <form>
-        <input type="email" placeholder="Digite seu email" id="email">
-        <br>
-        <input type="password" placeholder="Digite sua senha" id="senha">
-        <br>
-        <input type="button" id="botao" value="Enviar">
-    </form>
+    <div class="container">
+        <div class="left">
+            <form>
+                <input type="email" placeholder="Digite seu email" id="email">
+                <br>
+                <input type="password" placeholder="Digite sua senha" id="senha"><button type="button"onclick="ver_senha()">View</button>
+                <br>
+                <input type="button" id="botao" value="Enviar">
+                <br><br>
+                <hr>
+                <br>
+                Esqueci minha senha?
+
+            </form> 
+        </div>
+
+        <div class="right">
+            <img src="../src/svg/login-rafiki.svg">
+        </div>
+           
+    </div>
     
 
 
@@ -26,7 +41,7 @@
         botao.addEventListener("click", async() => {
             const url = "http://127.0.0.1:3000/auth/login/";
             
-            if(email_us != "" && senha_us != "")
+            if(email_us.value != "" && senha_us.value != "")
             {
                 const data = {
                     email: `${email_us.value}`,
@@ -40,11 +55,20 @@
                         },
                         body: JSON.stringify(data),
                     } 
-                 ).then(function(resp){
-                    let tokenzinho = resp.token;
+                 ).then(async function(resp){
+                    let dados = await resp.json();
+                    let { token: tokenzinho } = dados;
                     localStorage.setItem('token', tokenzinho);
-                    console.log(tokenzinho);
-                    window.location.href = "dashboard.html";
+                    if(tokenzinho != "" && typeof tokenzinho != "undefined" && dados.msg != "")
+                    {
+                        console.log(tokenzinho);
+                        window.location.href = "dashboard.html";
+                    }
+                    else
+                    {
+                        alert("informacoes erradas");
+                    }
+                    
                  });
             }
             else

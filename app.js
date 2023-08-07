@@ -37,7 +37,7 @@ function auth_middleware()
 app.get("/protect", check_token(), async (req, res) => {
 
     
-    return res.status(200).json({msg: "VOCE ESTA COMPLETAMENTE AUTORIZADO!"});
+    return true;
 
 });
 
